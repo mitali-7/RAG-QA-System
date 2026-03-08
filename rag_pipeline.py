@@ -4,7 +4,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
-from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from langchain.chains import RetrievalQA
 
 
@@ -42,11 +42,11 @@ def process_pdf(uploaded_file):
 
 
 def build_qa_chain(vector_store):
-
+    
     retriever = vector_store.as_retriever()
 
-    llm = ChatOpenAI(
-        model="gpt-4o-mini",
+    llm = ChatOllama(
+        model="phi3:mini",
         temperature=0
     )
 

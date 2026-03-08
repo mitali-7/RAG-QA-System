@@ -32,10 +32,10 @@ if uploaded_file:
 
         if question:
             # testing if RAG pipeline is workiing by displaying the chunks retrieved
-            docs = st.session_state.vector_store.similarity_search(question)
-            for d in docs:
-                st.write(d.page_content[:200])
-                
+            # docs = st.session_state.vector_store.similarity_search(question)
+            # for d in docs:
+            #     st.write(d.page_content[:200])
+
             with st.spinner("Generating answer..."):
                 response = qa_chain.run(question)
 
