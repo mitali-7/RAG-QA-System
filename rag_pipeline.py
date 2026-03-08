@@ -7,6 +7,8 @@ from langchain_community.vectorstores import Chroma
 from langchain_ollama import ChatOllama
 from langchain.chains import RetrievalQA
 
+from langchain.prompts import PromptTemplate
+
 
 def process_pdf(uploaded_file):
 
@@ -40,6 +42,27 @@ def process_pdf(uploaded_file):
 
     return vector_store
 
+prompt_template = """
+You are a helpful assistant answering questions from a document.
+
+Use ONLY the provided context to answer the question.
+
+If the answer is not contained in the context, say:
+"I don't know based on the provided document."
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:
+"""
+
+PROMPT = PromptTemplate(
+    template=prompt_template,
+    input_variables=["context", "question"]
+)
 
 def build_qa_chain(vector_store):
     
@@ -52,7 +75,9 @@ def build_qa_chain(vector_store):
 
     qa_chain = RetrievalQA.from_chain_type(
         llm=llm,
-        retriever=retriever
+        retriever=retriever,
+        return_source_documents=True,
+        chain_type_kwargs={"prompt": PROMPT}
     )
 
     return qa_chain

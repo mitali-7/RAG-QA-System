@@ -1,7 +1,7 @@
 import streamlit as st
 from rag_pipeline import process_pdf, build_qa_chain
 
-st.title("📄 RAG PDF Question Answering System")
+st.title("RAG PDF Question Answering System")
 
 st.write("Upload a PDF and ask questions about it.")
 
@@ -37,10 +37,20 @@ if uploaded_file:
             #     st.write(d.page_content[:200])
 
             with st.spinner("Generating answer..."):
-                response = qa_chain.run(question)
+                # response = qa_chain.run(question)
+                result = qa_chain({"query": question})
+
+                answer = result["result"]
+                sources = result["source_documents"]
 
             st.subheader("Answer")
-            st.write(response)
+            st.write(answer)
+            st.subheader("Sources")
+
+            for i, doc in enumerate(sources):
+                st.write(f"Source {i+1}:")
+                st.write(doc.page_content)
+                st.write("---")
 
         else:
             st.warning("Please enter a question.")
